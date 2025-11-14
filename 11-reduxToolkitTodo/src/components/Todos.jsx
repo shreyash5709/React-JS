@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { removeTodo } from '../features/todo/todoSlice';
+import { removeTodo, updateTodo, isTodoEditable } from '../features/todo/todoSlice';
 
 function Todos() {
   const todos = useSelector(state => state.todos);
@@ -7,15 +7,34 @@ function Todos() {
 
   return (
     <>
-    <div>Todos</div>
+    <div className='mt-10 text-3xl'>Todos</div>
     <ul className="list-none">
         {todos.map((todo) => (
           <li
             className="mt-4 flex justify-between items-center bg-zinc-800 px-4 py-2 rounded"
             key={todo.id}
           >
-            <div className='text-white'>{todo.text}</div>
-            
+            <input
+                type="text"
+                className={`border outline-none w-full bg-transparent rounded-lg ${
+                    todo.editable ? "border-white/10 text-gray-500 px-2" : "border-transparent text-white px-2"
+                } `}
+                value={todo.text}
+                onChange={
+                    (e) => dispatch(updateTodo({ id: todo.id, text: e.target.value }))
+                }
+                readOnly={!todo.editable}
+            />
+            <button
+              className="text-white bg-blue-500 border-0 py-1 px-4 focus:outline-none hover:bg-blue-600 rounded text-md mx-2"
+              onClick={() => {
+                // Toggle editable state
+                dispatch(isTodoEditable({ id: todo.id, editable: !todo.editable }));
+              }}
+            >
+              {todo.editable ? "💾" : "✏️"}
+            </button>
+
             <button
              onClick={() => dispatch(removeTodo(todo.id))}
               className="text-white bg-red-500 border-0 py-1 px-4 focus:outline-none hover:bg-red-600 rounded text-md"
