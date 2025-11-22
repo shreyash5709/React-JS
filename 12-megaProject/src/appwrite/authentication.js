@@ -41,7 +41,7 @@ export class AuthenticationService {
         }   
     }
 
-    async grtCurrentUser() {
+    async getCurrentUser() {
         try {
             return await this.account.get();
         }
